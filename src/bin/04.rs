@@ -6,25 +6,23 @@ fn main() {
 }
 
 fn hash_starts_with(s: &str) -> i64 {
-    let input = std::fs::read_to_string("inputs/04.txt").expect("Unable to read file");
-    let input = input.trim();
+    let input = std::fs::read_to_string("inputs/04.txt")
+        .expect("Unable to read file")
+        .trim().to_string();
     for n in 0.. {
-        let mut cat = String::new();
-        cat.push_str(input);
-        cat.push_str(n.to_string().as_str());
-        let hash = md5hash(cat);
+        let cat = format!("{input}{n}");
+        let hash = md5hash(&cat);
         print!("{hash} {n}\r");
         if hash.starts_with(s) {
-            println!("");
+            println!();
             return n;
         }
     }
-    return -1;
+    unreachable!();
 }
 
-fn md5hash(d: String) -> String {
+fn md5hash(d: &str) -> String {
     let mut hasher = Md5::new();
     hasher.update(d.trim());
-    let hash = format!("{:x}", hasher.finalize());
-    return hash;
+    format!("{:x}", hasher.finalize())
 }
